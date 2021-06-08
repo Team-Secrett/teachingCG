@@ -44,6 +44,28 @@ namespace Rendering
             int[] newIndices = Indices.Clone() as int[];
             return new Mesh<V>(newVertices, newIndices, this.Topology);
         }
+
+        public static Mesh<V> operator + (Mesh<V> first, Mesh<V> second)
+        {
+            if (first.Topology != second.Topology)
+            {
+                throw new InvalidOperationException("Different Topology");
+            }
+
+            var vertices = new V[first.Vertices.Length + second.Vertices.Length];
+            var indices = new int[first.Indices.Length + second.Indices.Length];
+
+            Array.Copy(first.Vertices, vertices, first.Vertices.Length);
+            Array.Copy(second.Vertices, 0, vertices, first.Vertices.Length, second.Vertices.Length);
+            Array.Copy(first.Indices, indices, first.Indices.Length);
+
+            for(int i = 0; i < second.Indices.Length; i++)
+            {
+                indices[i + first.Indices.Length] = second.Indices[i] + first.Vertices.Length;
+            }
+
+            return new Mesh<V>(vertices, indices);
+        }
     }
 
     public static class MeshTools
@@ -175,7 +197,7 @@ namespace Rendering
         /// <summary>
         /// Computes the normals of the mesh vertices using the positions and the orientation of the triangles.
         /// </summary>
-        public static void ComputeNormals<V>(this Mesh<V> mesh) where V:struct, INormalVertex<V>
+        public static void ComputeNormals<V>(this Mesh<V> mesh, bool invert = false) where V:struct, INormalVertex<V>
         {
             if (mesh.Topology != Topology.Triangles)
                 return;
@@ -189,7 +211,9 @@ namespace Rendering
                 float3 p2 = mesh.Vertices[mesh.Indices[i * 3 + 2]].Position;
 
                 // Compute the normal of the triangle.
-                float3 N = cross(p1 - p0, p2 - p0);
+                float3 N = float3(0, 0, 0);
+                if (invert) N = cross(p0 - p1, p2 - p1);
+                else N = cross(p1 - p0, p2 - p0);
 
                 // Add the normal to the vertices involved
                 normals[mesh.Indices[i * 3 + 0]] += N;
