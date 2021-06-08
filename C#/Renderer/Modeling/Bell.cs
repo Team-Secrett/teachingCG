@@ -36,7 +36,7 @@ namespace Renderer
             int points = 20;
             float3[] contourn = new float3[points];
             int id = 0;
-            float width = 0.8f;
+            float width = 0.7f;
             float delta = (1f * width) / points;
             for (float i = 0;i < width; i += delta)
             {
@@ -72,8 +72,6 @@ namespace Renderer
                 0.4f,
                 0.5f,
                 0.8f,
-                // 0.7f,
-                // 0.8f,
                 0.8f,
                 0f,
             };

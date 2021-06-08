@@ -17,9 +17,9 @@ namespace Renderer
     {
         public static float GlassHeight = 2.5f;
 
-        public static float GlassUpperRadius = 1;
+        public static float GlassUpperRadius = 1f;
 
-        public static float GlassLowerRadius = 0.9f;
+        public static float GlassLowerRadius = 0.85f;
 
 
         /// Glass width radius in body
@@ -30,14 +30,14 @@ namespace Renderer
 
         public static float GlassBottomHeight = 0.5f;
 
-        public static float GlassBottomLowerRadius = .9f;
+        public static float GlassBottomLowerRadius = .85f;
 
         public static float StickHeight = 0.7f;
 
         public static void AddToScene(Scene<T, Material> scene, float4x4 transform)
         {
             /// bottom of the glass
-            var glassBottom = GlassBottom().Transform(Transforms.Translate(0, 0.05f, 0));
+            var glassBottom = GlassBottom().Transform(Transforms.Translate(0, 0.07f, 0));
             Material glassBottomMaterial = new Material
             {
                 Specular = float3(1, 1, 1),
@@ -73,9 +73,6 @@ namespace Renderer
                 SpecularPower = 60,
                 Diffuse = float3(1.5f, 1.5f, 1.5f),
                 Emissive = 0.3f,
-
-                // WeightDiffuse = 0.5f,
-                // RefractionIndex = 1.05f
             };
 
             // stick

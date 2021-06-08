@@ -187,7 +187,8 @@ namespace Renderer
 
         static void CreateRaycastScene(Scene<PositionNormalCoordinate, Material> scene)
         {
-            Texture2D planeTexture = Texture2D.LoadFromFile("wood.jpeg");
+            Texture2D planeTexture = Texture2D.LoadFromFile("black.jpeg");
+            Texture2D wallTexture = Texture2D.LoadFromFile("beige-wall.jpeg");
 
             // Adding elements of the scene
             var sphereModel = Raycasting.UnitarySphere.AttributesMap(a =>
@@ -249,6 +250,21 @@ namespace Renderer
             scene.Add(Raycasting.PlaneXZ.AttributesMap(a => new PositionNormalCoordinate { Position = a, Coordinates = float2(a.x*0.2f, a.z*0.2f), Normal = float3(0, 1, 0) }),
                 new Material { DiffuseMap = planeTexture, Diffuse = float3(1, 1, 1), TextureSampler = new Sampler { Wrap = WrapMode.Repeat, MinMagFilter = Filter.Linear } },
                 Transforms.Identity);
+            
+            scene.Add(Raycasting.PlaneXY.AttributesMap(a => new PositionNormalCoordinate
+                {
+                    Position = a,
+                    Coordinates = float2(a.x * 0.2f, a.z * 0.2f),
+                    Normal = float3(0, 0, 1)
+                }),
+                new Material
+                {
+                    DiffuseMap = wallTexture,
+                    Diffuse = float3(1, 1, 1),
+                    TextureSampler = new Sampler { Wrap = WrapMode.Repeat, MinMagFilter = Filter.Linear }
+                },
+                mul(Transforms.Translate(0, 0, -6), Transforms.Rotate(pi / 9 - 0.04f, float3(0, 1, 0)))
+            );
             // Light source
             // scene.Add(sphereModel, new Material
             // {
@@ -288,8 +304,8 @@ namespace Renderer
 
         // Scene Setup
         static float3 CameraPosition = float3(3, 7, 10);
-        static float3 LightPosition = float3(4, 8, 3);
-        static float3 LightIntensity = float3(1, 1, 1) * 260;
+        static float3 LightPosition = float3(5, 10, 7);
+        static float3 LightIntensity = float3(1, 0.9f, 0.64f) * 340;
 
         static void Raytracing (Texture2D texture)
         {
@@ -476,7 +492,7 @@ namespace Renderer
         public static void Main()
         {
             // Texture to output the image.
-            int res = 256;
+            int res = 128;
             Texture2D texture = new Texture2D(res, res);
 
             bool UseRT = true;
