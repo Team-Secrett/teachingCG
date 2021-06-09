@@ -453,7 +453,7 @@ namespace Renderer
         public static void Main()
         {
             // Texture to output the image.
-            int res = 200;
+            int res = 256;
             Texture2D texture = new Texture2D(res, res);
 
             bool UseRT = false;
