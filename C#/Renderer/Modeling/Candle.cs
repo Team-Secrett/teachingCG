@@ -41,12 +41,12 @@ namespace Renderer
             Material glassBottomMaterial = new Material
             {
                 Specular = float3(1, 1, 1),
-                SpecularPower = 260,
+                SpecularPower = 60,
                 Diffuse = float3(1, 1, 1),
 
-                WeightDiffuse = 0,
+                WeightDiffuse = 1f,
                 WeightFresnel = 1f, 
-                RefractionIndex = 1.05f
+                RefractionIndex = 1.15f
             };
 
             /// glass body
@@ -71,8 +71,8 @@ namespace Renderer
             {
                 Specular = float3(1, 1, 1),
                 SpecularPower = 60,
-                Diffuse = float3(1.5f, 1.5f, 1.5f),
-                Emissive = 0.3f,
+                Diffuse = float3(0.6f, 0.2f, 0.0f),
+                Emissive = 0.1f,
             };
 
             // stick
@@ -96,7 +96,7 @@ namespace Renderer
                 Specular = float3(1, 1, 1) * 0.1f,
                 SpecularPower = 260,
                 Diffuse = float3(3.6f, 2.6f, 0.2f),
-                Emissive = 0.48f,
+                Emissive =  0.3f,
             };
 
             scene.Add(glassBottom.AsRaycast(RaycastingMeshMode.Grid), glassBottomMaterial, transform);
@@ -161,7 +161,7 @@ namespace Renderer
             var model = GlassBody();
             model = model.Transform(Transforms.Scale(scale, upperScale, scale));
             model = model.Transform(Transforms.Translate(0, 0, 0));
-            model.ComputeNormals();
+            model.ComputeNormals(true);
 
             float3[] topContourn =
             {
@@ -222,7 +222,7 @@ namespace Renderer
 
             var model = Manifold<T>.Revolution(20, 30, t => MeshShapeGenerator<T>.EvalBezier(contourn, t), float3(0, 1, 0)).Weld();
             model = model.Transform(Transforms.Scale(2.8f, 1.8f, 2.8f));
-            model.ComputeNormals();
+            model.ComputeNormals(true);
 
             return model;
         }

@@ -201,52 +201,6 @@ namespace Renderer
             Candle<PositionNormalCoordinate>.AddToScene(scene, Transforms.Translate(1, 0, 0));
             Bell<PositionNormalCoordinate>.AddToScene(scene, Transforms.Translate(-4, 0, -2));
 
-            // var pe = MeshShapeGenerator<PositionNormalCoordinate>.pseudoEllipse();
-            // var pomel = MeshShapeGenerator<PositionNormalCoordinate>.Pomel(2);
-            // pomel = pomel.Transform(Transforms.Translate(0, 2, 0));
-            // pe = pe.Transform(Transforms.Translate(0, 2, 0));
-
-            // scene.Add(pomel.AsRaycast(RaycastingMeshMode.Grid), new Material
-            // {
-            //     Specular = float3(1, 1, 1),
-            //     SpecularPower = 260,
-            //     Diffuse = float3(1, 1, 1.3f),
-
-            //     // WeightDiffuse = 0,
-            //     // WeightMirror = 1.0f,
-            //     // RefractionIndex = 1.1f
-            // }, Transforms.Translate(1.5f, 0, 1.5f));
-
-
-            // scene.Add(sphereModel, new Material
-            // {
-            //     Specular = float3(1, 1, 1),
-            //     SpecularPower = 260,
-
-            //     WeightDiffuse = 0,
-            //     WeightFresnel = 1.0f, // Glass sphere
-            //     RefractionIndex = 1.1f
-            // },
-            //     Transforms.Translate(1.5f, 1, 1.5f));
-
-            // scene.Add(sphereModel, new Material
-            // {
-            //     Specular = float3(1, 1, 1),
-            //     SpecularPower = 260,
-
-            //     WeightDiffuse = 0,
-            //     WeightMirror = 1.0f, // Mirror sphere
-            // },
-            //     Transforms.Translate(1.5f, 1, 0));
-
-            // scene.Add(sphereModel, new Material
-            // {
-            //     Specular = float3(1, 1, 1)*0.1f,
-            //     SpecularPower = 60,
-            //     Diffuse = float3(1, 1, 1)
-            // },
-            //     Transforms.Translate(0.0f, 1, 2.5f));
-
             scene.Add(Raycasting.PlaneXZ.AttributesMap(a => new PositionNormalCoordinate { Position = a, Coordinates = float2(a.x*0.2f, a.z*0.2f), Normal = float3(0, 1, 0) }),
                 new Material { DiffuseMap = planeTexture, Diffuse = float3(1, 1, 1), TextureSampler = new Sampler { Wrap = WrapMode.Repeat, MinMagFilter = Filter.Linear } },
                 Transforms.Identity);
@@ -268,12 +222,12 @@ namespace Renderer
             // Light source
             // scene.Add(sphereModel, new Material
             // {
-            //     Emissive = LightIntensity / (4 * pi), // power per unit area
+            //     Emissive = CandleLightIntensity / (4 * pi), // power per unit area
             //     WeightDiffuse = 0,
             //     WeightFresnel = 1.0f, // Glass sphere
             //     RefractionIndex = 1.0f
             // },
-            //    mul(Transforms.Scale(2.4f, 0.4f, 2.4f), Transforms.Translate(LightPosition)));
+            //    mul(Transforms.Scale(0.2f, 0.2f, 0.2f), Transforms.Translate(CandleLightPosition)));
         }
 
         #endregion
@@ -304,10 +258,16 @@ namespace Renderer
 
         // Scene Setup
         static float3 CameraPosition = float3(3, 7, 10);
-        static float3 LightPosition = float3(5, 10, 7);
-        static float3 LightIntensity = float3(1, 0.9f, 0.64f) * 340;
 
-        static void Raytracing (Texture2D texture)
+        static float3 GlobalLightPosition = float3(3, 10, 3);
+
+        static float3 GlobalLightIntensity = float3(1, 1, 1) * 70;
+
+        static float3 CandleLightPosition = float3(1, 2.2f, 0.07f);
+
+        static float3 CandleLightIntensity = float3(1, 0.8f, 0.44f) * 360;
+
+        static void Raytracing (Texture2D texture, float3 lightPosition, float3 lightIntensity)
         {
             // View and projection matrices
             float4x4 viewMatrix = Transforms.LookAtLH(CameraPosition, float3(0, 1, 0), float3(0, 1, 0));
@@ -339,7 +299,7 @@ namespace Renderer
 
                 float3 V = -normalize(context.GlobalRay.Direction);
 
-                float3 L = (LightPosition - attribute.Position);
+                float3 L = (lightPosition - attribute.Position);
                 float d = length(L);
                 L /= d; // normalize direction to light reusing distance to light
 
@@ -362,7 +322,7 @@ namespace Renderer
                     RayDescription.FromDir(attribute.Position + attribute.Normal * 0.001f, // Move an epsilon away from the surface to avoid self-shadowing 
                     L), ref shadow);
 
-                float3 Intensity = (shadow.Shadowed ? 0.2f : 1.0f) * LightIntensity / (d * d);
+                float3 Intensity = (shadow.Shadowed ? 0.2f : 1.0f) * lightIntensity / (d * d);
 
                 payload.Color = material.Emissive + material.EvalBRDF(attribute, V, L) * Intensity * lambertFactor; // direct light computation
 
@@ -403,11 +363,12 @@ namespace Renderer
                     RayDescription ray = RayDescription.FromScreen(px + 0.5f, py + 0.5f, texture.Width, texture.Height, inverse(viewMatrix), inverse(projectionMatrix), 0, 1000);
 
                     RTRayPayload coloring = new RTRayPayload();
-                    coloring.Bounces = 8;
+                    coloring.Bounces = 6;
 
                     raycaster.Trace(scene, ray, ref coloring);
 
-                    texture.Write(px, py, float4(coloring.Color, 1));
+                    float4 current = texture.Read(px, py);
+                    texture.Write(px, py, current + float4(coloring.Color, 1));
                 }
         }
 
@@ -492,17 +453,18 @@ namespace Renderer
         public static void Main()
         {
             // Texture to output the image.
-            int res = 128;
+            int res = 200;
             Texture2D texture = new Texture2D(res, res);
 
-            bool UseRT = true;
+            bool UseRT = false;
             if (UseRT)
             {
                 Stopwatch stopwatch = new Stopwatch();
 
                 stopwatch.Start();
 
-                Raytracing(texture);
+                Raytracing(texture, CandleLightPosition, CandleLightIntensity);
+                // Raytracing(texture, GlobalLightPosition, GlobalLightIntensity);
 
                 stopwatch.Stop();
 
