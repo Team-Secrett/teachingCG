@@ -142,8 +142,8 @@ namespace Renderer
                 float3(GlassBottomLowerRadius, 0, 0),
                 float3(GlassLowerRadius, GlassBottomHeight, 0),
 
-                float3(GlassLowerRadius - BottomGlassRadius, GlassBottomHeight, 0),
-                float3(GlassLowerRadius - BottomGlassRadius, 0, 0)
+                // float3(GlassLowerRadius - BottomGlassRadius, GlassBottomHeight, 0),
+                // float3(GlassLowerRadius - BottomGlassRadius, 0, 0)
             };
 
             var model = Manifold<T>.Revolution(20, 30, t => MeshShapeGenerator<T>.EvalBezier(contourn, t), float3(0, 1, 0)).Weld();

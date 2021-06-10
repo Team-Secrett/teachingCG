@@ -457,7 +457,7 @@ namespace Renderer
             int res = 512;
             Texture2D texture = new Texture2D(res, res);
 
-            bool UseRT = true;
+            bool UseRT = false;
             if (UseRT)
             {
                 Stopwatch stopwatch = new Stopwatch();
