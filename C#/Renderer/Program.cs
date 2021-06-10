@@ -68,6 +68,8 @@ namespace Renderer
 
         public struct Material
         {
+            public float Density;
+
             public float3 Emissive;
 
             public Texture2D DiffuseMap;
@@ -229,6 +231,15 @@ namespace Renderer
                 },
                 mul(Transforms.Translate(0, 0, -6), Transforms.Rotate(pi / 9 - 0.04f, float3(0, 1, 0)))
             );
+
+            scene.Add(sphereModel, new Material
+            {
+                Emissive = GlobalLightIntensity / (4 * pi), // power per unit area
+                WeightDiffuse = 0,
+                WeightFresnel = 1.0f, // Glass sphere
+                RefractionIndex = 1.0f
+            },
+               mul(Transforms.Scale(2.4f, 0.4f, 2.4f), Transforms.Translate(GlobalLightPosition)));
         }
 
         #endregion
@@ -262,7 +273,7 @@ namespace Renderer
 
         static float3 GlobalLightPosition = float3(3, 10, 3);
 
-        static float3 GlobalLightIntensity = float3(1, 1, 1) * 70;
+        static float3 GlobalLightIntensity = float3(1, 1, 1) * 100;
 
         static float3 CandleLightPosition = float3(1, 2.2f, 0.07f);
 
@@ -454,7 +465,7 @@ namespace Renderer
         public static void Main()
         {
             // Texture to output the image.
-            int res = 512;
+            int res = 128;
             Texture2D texture = new Texture2D(res, res);
 
             bool UseRT = false;

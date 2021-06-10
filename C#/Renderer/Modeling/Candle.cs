@@ -59,7 +59,7 @@ namespace Renderer
 
                 WeightDiffuse = 0,
                 WeightFresnel = 1.5f,
-                RefractionIndex = .96f
+                RefractionIndex = .96f,
             };
             glassBody = glassBody.Transform(Transforms.Translate(0, GlassBottomHeight, 0));
 
@@ -69,11 +69,15 @@ namespace Renderer
 
             Material waxMaterial = new Material
             {
-                Specular = float3(0, 0, 0),
-                SpecularPower = 0,
-                Diffuse = float3(0.24f, 0.24f, 0.24f),
+                Specular = float3(1, 1, 1) * 0.2f,
+                SpecularPower = 60,
+                // Diffuse = float3(0.24f, 0.24f, 0.24f),
+                Diffuse = float3(0.8f, 0.55f, 0.14f),
 
-                Emissive = 0.2f
+                Emissive = 0.2f,
+                // WeightMirror = 2,
+                // WeightFresnel = 2,
+                // RefractionIndex = 2,
             };
 
             // stick
@@ -96,8 +100,8 @@ namespace Renderer
             {
                 Specular = float3(1, 1, 1) * 0.1f,
                 SpecularPower = 260,
-                Diffuse = float3(2.6f, 2.6f, 2.2f),
-                Emissive =  0.3f,
+                Diffuse = float3(0.74f, 0.44f, 0.14f),
+                Emissive =  170 / (4 * pi),
             };
 
             scene.Add(glassBottom.AsRaycast(RaycastingMeshMode.Grid), glassBottomMaterial, transform);
@@ -160,9 +164,11 @@ namespace Renderer
             float scale = 0.92f;
             float upperScale = 0.5f;
             var model = GlassBody();
-            model = model.Transform(Transforms.Scale(scale, upperScale, scale));
-            model = model.Transform(Transforms.Translate(0, 0, 0));
+            model = model.Transform(Transforms.Scale(scale, upperScale, scale)).Weld();
+            model = model.Transform(Transforms.Translate(0, 0, 0)).Weld();
             model.ComputeNormals(true);
+            var model2 = model.Clone().Weld();
+            model2.ComputeNormals();
 
             float3[] topContourn =
             {
@@ -175,14 +181,18 @@ namespace Renderer
                 float3(GlassLowerRadius * scale - 0.1f, 0, 0)
             };
             var topCircle = Manifold<T>.Revolution(20, 30, t => MeshShapeGenerator<T>.EvalBezier(topContourn, t), float3(0, 1, 0)).Weld();
+            var topCircle2 = topCircle.Clone();
             topCircle.ComputeNormals(true);
+            topCircle2.ComputeNormals();
 
             topCircle = topCircle.Transform(Transforms.Translate(0, 1.72f * upperScale, 0));
 
             var bottomCircle = Manifold<T>.Revolution(20, 30, t => MeshShapeGenerator<T>.EvalBezier(topContourn, t), float3(0, 1, 0)).Weld();
+            var bottomCircle2 = bottomCircle.Clone();
             bottomCircle.ComputeNormals(true);
+            bottomCircle.ComputeNormals();
 
-            return (topCircle + bottomCircle + model).Weld();
+            return (topCircle + topCircle2 + bottomCircle + bottomCircle2 + model + model2).Weld();
         }
 
         public static Mesh<T> BurnedStick()
