@@ -1,5 +1,11 @@
 # Example scene generation with pathtracing & raytracing from scratch
 
+![scene](assets/scene.jpg)
+
+- Members
+  * Samuel David Suárez Rodríguez
+  * Enmanuel Verdesia Suárez
+
 > For the spanish version, see [spanish](README_es.md)
 
 This is an example of using the raytracing and pathtracing algorithms to generate images, taking as a sample a real scene where a candle lights a porcelain bell.
@@ -70,3 +76,8 @@ The floor has a dark texture together with reflective material that allows it to
 ### `830 iterations`
 
 ![pathtracing-830](assets/pt-830.jpg)
+
+
+### `1100 iterations`
+
+![pathtracing-830](assets/pt-1100.jpg)

@@ -1,5 +1,11 @@
 # Ejemplo de generación de imágenes usando `Pathtracing & Raytracing` desde 0
 
+![scene](assets/scene.jpg)
+
+- Estudiantes
+  * Samuel David Suárez Rodríguez
+  * Enmanuel Verdesia Suárez
+
 > Para la versión en inglés, ver [inglés](README.md)
 
 Este es un ejemplo de uso de los algoritmos `raytracing` y `pathtracing` para generar imágenes, tomando como ejemplo una escena real donde una vela alumbra una campana de porcelana.
@@ -71,3 +77,8 @@ El suelo tiene una textura oscura con material `reflective` que permite reflejar
 ### `830 iteraciones`
 
 ![pathtracing-830](assets/pt-830.jpg)
+
+
+### `1100 iteraciones`
+
+![pathtracing-830](assets/pt-1100.jpg)
