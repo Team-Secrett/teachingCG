@@ -72,6 +72,8 @@ namespace Renderer
                 Specular = float3(0, 0, 0),
                 SpecularPower = 0,
                 Diffuse = float3(0.24f, 0.24f, 0.24f),
+
+                Emissive = 0.2f
             };
 
             // stick

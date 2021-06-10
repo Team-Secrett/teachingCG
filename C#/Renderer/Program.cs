@@ -202,7 +202,17 @@ namespace Renderer
             Bell<PositionNormalCoordinate>.AddToScene(scene, Transforms.Translate(-4, 0, -2));
 
             scene.Add(Raycasting.PlaneXZ.AttributesMap(a => new PositionNormalCoordinate { Position = a, Coordinates = float2(a.x*0.2f, a.z*0.2f), Normal = float3(0, 1, 0) }),
-                new Material { DiffuseMap = planeTexture, Diffuse = float3(1, 1, 1), TextureSampler = new Sampler { Wrap = WrapMode.Repeat, MinMagFilter = Filter.Linear } },
+                new Material
+                {
+                    Specular = float3(1, 1, 1) * 0.15f,
+                    // SpecularPower = 60,
+
+                    DiffuseMap = planeTexture,
+                    Diffuse = float3(1, 1, 1),
+                    TextureSampler = new Sampler { Wrap = WrapMode.Repeat, MinMagFilter = Filter.Linear },
+                    
+                    WeightMirror = 0.5f,
+                },
                 Transforms.Identity);
             
             scene.Add(Raycasting.PlaneXY.AttributesMap(a => new PositionNormalCoordinate
@@ -444,7 +454,7 @@ namespace Renderer
         public static void Main()
         {
             // Texture to output the image.
-            int res = 256;
+            int res = 512;
             Texture2D texture = new Texture2D(res, res);
 
             bool UseRT = true;
