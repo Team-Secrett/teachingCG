@@ -1,6 +1,6 @@
 # Example scene generation with pathtracing & raytracing from scratch
 
-> For the spanish version, see [spanish](README.md)
+> For the spanish version, see [spanish](README_es.md)
 
 This is an example of using the raytracing and pathtracing algorithms to generate images, taking as a sample a real scene where a candle lights a porcelain bell.
 
@@ -14,22 +14,6 @@ dotnet run
 ### Bell
 
 The body of the bell was generated from the function "Gaussian Bell" in revolution on the y axis. The bell handle was obtained by interpolating several points with a bezier curve also in revolution on the y-axis.
-
-### Candle
-
-The candle was divided in several meshes:
-- fire
-- burned stick
-- wax
-- glass (body & bottom)
-
-All of these meshes were generated using simple geometry and bezier curves in revolution.
-
-## Materials
-
-### Bell
-
-To achieve the "porcelain" effect in the mesh we use the gray color with a specular value higher than normal, which allows the light that enters the body to be reflected.
 
 <div style="display: flex; flexDirection: row;">
 
@@ -46,6 +30,22 @@ To achieve the "porcelain" effect in the mesh we use the gray color with a specu
 </div>
 
 </div>
+
+### Candle
+
+The candle was divided in several meshes:
+- fire
+- burned stick
+- wax
+- glass (body & bottom)
+
+All of these meshes were generated using simple geometry and bezier curves in revolution.
+
+## Materials
+
+### Bell
+
+To achieve the "porcelain" effect in the mesh we use the gray color with a specular value higher than normal, which allows the light that enters the body to be reflected.
 
 ### Candle
 
