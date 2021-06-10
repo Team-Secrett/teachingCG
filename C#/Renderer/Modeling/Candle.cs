@@ -96,7 +96,7 @@ namespace Renderer
             {
                 Specular = float3(1, 1, 1) * 0.1f,
                 SpecularPower = 260,
-                Diffuse = float3(3.6f, 2.6f, 0.2f),
+                Diffuse = float3(2.6f, 2.6f, 2.2f),
                 Emissive =  0.3f,
             };
 
