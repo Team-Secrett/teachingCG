@@ -1,6 +1,6 @@
 # Example scene generation with pathtracing & raytracing from scratch
 
-> For the spanish version, see [spanish](README.md)
+> For the spanish version, see [spanish](README_es.md)
 
 This is an example of using the raytracing and pathtracing algorithms to generate images, taking as a sample a real scene where a candle lights a porcelain bell.
 
