@@ -1,9 +1,72 @@
-# Proyectos por equipo
+# Example scene generation with pathtracing & raytracing from scratch
 
-En esta carpeta deberán crear un directorio propio con una combinación de letras de no mas de 6 caracteres. Conformados por los nombres del equipo.
+> For the spanish version, see [spanish](README.md)
 
-En cada carpeta ustedes tendrán una versión propia de un proyecto Renderer. Además, deberán subir aquí la foto que les está sirviendo de guía para el proyecto.
+This is an example of using the raytracing and pathtracing algorithms to generate images, taking as a sample a real scene where a candle lights a porcelain bell.
 
-En la raíz de su carpeta particular deberán tener un readme.md con las anotaciones de qué han hecho y si tienen dudas, una sección #duda a la que el profesor deberá dar respuesta en el mismo reporte.
+## Run
+```
+dotnet run
+```
 
-Al finalizar el curso, este .md será el reporte final y junto con la ejecución de su proyecto y la complejidad, se determinará la evaluación.
+## Modeling
+
+### Bell
+
+The body of the bell was generated from the function "Gaussian Bell" in revolution on the y axis. The bell handle was obtained by interpolating several points with a bezier curve also in revolution on the y-axis.
+
+### Candle
+
+The candle was divided in several meshes:
+- fire
+- burned stick
+- wax
+- glass (body & bottom)
+
+All of these meshes were generated using simple geometry and bezier curves in revolution.
+
+## Materials
+
+### Bell
+
+To achieve the "porcelain" effect in the mesh we use the gray color with a specular value higher than normal, which allows the light that enters the body to be reflected.
+
+<div style="display: flex; flexDirection: row;">
+
+<div style="margin: 0 10px;">
+
+  ![gauss-bell-equation](assets/gauss-bell-equation.png)
+
+</div style="margin: 0 10px">
+
+<div>
+
+  ![gauss-bell-function](assets/gauss-bell-function.png)
+
+</div>
+
+</div>
+
+### Candle
+
+The candle fire had an emissive material with a warm color that served as a light source, in addition a small value of emissive material was added in the wax which makes it appear that it reflects light, along with a slight yellow color, all this gives it the wax a gradient color effect.
+
+### Floor
+
+The floor has a dark texture together with reflective material that allows it to reflect part of the light it receives, together with diffuse material, this allows the glass with the blurred candle to be seen on it.
+
+
+## Raytracing result
+
+![raytracing](assets/rt.png)
+
+
+## Pathtracing result `(512 x 512)`
+
+### `640 iterations`
+
+![pathtracing-640](assets/pt-640.jpg)
+
+### `830 iterations`
+
+![pathtracing-830](assets/pt-830.jpg)
