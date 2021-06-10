@@ -39,49 +39,6 @@ namespace Renderer
             return model.Weld();
         }
 
-        /// <Debug>
-        public static Mesh<T> pseudoEllipse(float radius = 2, float a = 1.2f, float b = 1, int pieces = 20, int slices = 50, int stacks = 50, bool invert = false)
-        {
-            List<float3> points_list = new List<float3>();
-
-            float lim = sqrt(radius / b);
-            float frag = lim * 2 / pieces;
-
-            for (int i = 0; i < pieces; i++)
-            {
-                float z = -lim + i * frag;
-                float y = sqrt(max(radius - b * z * z, 0) / a);
-                points_list.Add(float3(0, y, z));
-            }
-
-            float3[] contourn = points_list.ToArray();
-
-            Mesh<T> ans = Manifold<T>.Revolution(20, 30, t => EvalBezier(contourn, t), float3(0, 0, 1)).Weld();
-            ans.ComputeNormals();
-
-            return ans;
-        }
-
-        public static Mesh<T> Pomel(float radius = 2f, int slices = 50, int stacks = 50, bool invert = false)
-        {
-            float deco_ratio = 0.5f;
-            float longit = (radius + deco_ratio);
-            Mesh<T> pomel_base = pseudoEllipse(radius, 1.1f, 1, 50, slices, stacks, invert);
-            Mesh<T> pomel_deco = pseudoEllipse(deco_ratio, 1, 1, 20, slices, stacks, invert);
-
-            float4x4 tbase = Transforms.Translate(0, 0, -radius);
-            float4x4 tdeco = Transforms.Translate(0, 0, -longit);
-
-            pomel_base = pomel_base.Transform(tbase);
-            pomel_deco = pomel_base.Transform(tdeco);
-
-            Mesh<T> pomel = (pomel_base + pomel_deco).Weld();
-
-            return pomel_deco;
-        }
-
-        /// </Debug>
-
         public static Mesh<T> Cylinder(float radius, float zmin, float zmax,int slices = 30, int stacks = 30)
         {
             return Manifold<T>.Surface(slices, stacks, (u, v) =>
