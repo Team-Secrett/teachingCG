@@ -28,7 +28,7 @@ namespace Renderer
         /// Glass width radius in bottom
         public static float BottomGlassRadius = 0.17f;
 
-        public static float GlassBottomHeight = 0.3f;
+        public static float GlassBottomHeight = 0.4f;
 
         public static float GlassBottomLowerRadius = .85f;
 
@@ -71,13 +71,9 @@ namespace Renderer
             {
                 Specular = float3(1, 1, 1) * 0.2f,
                 SpecularPower = 60,
-                // Diffuse = float3(0.24f, 0.24f, 0.24f),
                 Diffuse = float3(0.8f, 0.55f, 0.14f),
 
                 Emissive = 0.2f,
-                // WeightMirror = 2,
-                // WeightFresnel = 2,
-                // RefractionIndex = 2,
             };
 
             // stick
@@ -118,8 +114,8 @@ namespace Renderer
                 float3(GlassLowerRadius, 0, 0),
                 float3(GlassUpperRadius, GlassHeight, 0),
 
-                float3(GlassLowerRadius - UpperGlassRadius, GlassHeight, 0),
-                float3(GlassLowerRadius - UpperGlassRadius, 0, 0)
+                // float3(GlassLowerRadius - UpperGlassRadius, GlassHeight, 0),
+                // float3(GlassLowerRadius - UpperGlassRadius, 0, 0)
             };
 
             var model = Manifold<T>.Revolution(20, 30, t => MeshShapeGenerator<T>.EvalBezier(contourn, t), float3(0, 1, 0)).Weld();

@@ -12,9 +12,8 @@ namespace Renderer
     {
         public static float3 EvalBezier(float3[] control, float t)
         {
-            // DeCasteljau
             if (control.Length == 1)
-                return control[0]; // stop condition
+                return control[0];
             float3[] nestedPoints = new float3[control.Length - 1];
             for (int i = 0; i < nestedPoints.Length; i++)
                 nestedPoints[i] = lerp(control[i], control[i + 1], t);
