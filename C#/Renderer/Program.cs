@@ -219,15 +219,6 @@ namespace Renderer
                 },
                 mul(Transforms.Translate(0, 0, -6), Transforms.Rotate(pi / 9 - 0.04f, float3(0, 1, 0)))
             );
-            // Light source
-            // scene.Add(sphereModel, new Material
-            // {
-            //     Emissive = CandleLightIntensity / (4 * pi), // power per unit area
-            //     WeightDiffuse = 0,
-            //     WeightFresnel = 1.0f, // Glass sphere
-            //     RefractionIndex = 1.0f
-            // },
-            //    mul(Transforms.Scale(0.2f, 0.2f, 0.2f), Transforms.Translate(CandleLightPosition)));
         }
 
         #endregion
@@ -265,7 +256,7 @@ namespace Renderer
 
         static float3 CandleLightPosition = float3(1, 2.2f, 0.07f);
 
-        static float3 CandleLightIntensity = float3(1, 0.8f, 0.44f) * 360;
+        static float3 CandleLightIntensity = float3(0.74f, 0.44f, 0.14f) * 170;
 
         static void Raytracing (Texture2D texture, float3 lightPosition, float3 lightIntensity)
         {
@@ -363,7 +354,7 @@ namespace Renderer
                     RayDescription ray = RayDescription.FromScreen(px + 0.5f, py + 0.5f, texture.Width, texture.Height, inverse(viewMatrix), inverse(projectionMatrix), 0, 1000);
 
                     RTRayPayload coloring = new RTRayPayload();
-                    coloring.Bounces = 6;
+                    coloring.Bounces = 8;
 
                     raycaster.Trace(scene, ray, ref coloring);
 
@@ -456,7 +447,7 @@ namespace Renderer
             int res = 256;
             Texture2D texture = new Texture2D(res, res);
 
-            bool UseRT = false;
+            bool UseRT = true;
             if (UseRT)
             {
                 Stopwatch stopwatch = new Stopwatch();

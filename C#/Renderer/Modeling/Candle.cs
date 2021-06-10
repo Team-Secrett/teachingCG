@@ -69,10 +69,9 @@ namespace Renderer
 
             Material waxMaterial = new Material
             {
-                Specular = float3(1, 1, 1),
-                SpecularPower = 60,
-                Diffuse = float3(0.6f, 0.2f, 0.0f),
-                Emissive = 0.1f,
+                Specular = float3(0, 0, 0),
+                SpecularPower = 0,
+                Diffuse = float3(0.24f, 0.24f, 0.24f),
             };
 
             // stick
